@@ -1,13 +1,15 @@
 <template>
   <div id="app">
     <navbar></navbar>
-    <jumbo></jumbo>
-    <input class="filter" type="text" v-model="filterData" @input="scroll" ref="input" placeholder="Filter...">
-    <cards header="Fractals" :projects="fractalsProjectsFiltered"/>
-    <cards header="CLI (Command Line Interface)" :projects="cliFiltered"/>
-    <cards header="Mobile" :projects="mobileFiltered"/>
-    <cards header="Games" :projects="gamesFiltered"/>
-    <cards header="Web POC" :projects="webPOCFiltered"/>
+    <div class="main-container">
+      <jumbo></jumbo>
+      <input class="filter" type="text" v-model="filterData" @input="scroll" ref="input" placeholder="Filter...">
+      <cards header="Fractals" :projects="fractalsProjectsFiltered"/>
+      <cards header="CLI (Command Line Interface)" :projects="cliFiltered"/>
+      <cards header="Mobile" :projects="mobileFiltered"/>
+      <cards header="Games" :projects="gamesFiltered"/>
+      <cards header="Web POC" :projects="webPOCFiltered"/>
+    </div>
   </div>
 </template>
 
@@ -181,6 +183,11 @@ body {
   font-family: 'Jost';
   margin: 0;
   min-height: 100vh;
+}
+.main-container {
+  height: calc(100vh - 75px);
+  overflow-y: auto;
+  position: relative;
 }
 .filter {
   width: 200px;
