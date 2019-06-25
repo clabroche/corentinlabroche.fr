@@ -44,7 +44,7 @@ export default {
   height: 75px;
   display: flex;
   align-items: center;
-  font-size: 1.6em;
+  font-size: 1.5em;
   justify-content: space-between;
   a {
     color: white;
@@ -65,6 +65,11 @@ export default {
       transform: scale(1.2)
     }
 
+  }
+}
+@media (max-width: 800px) {
+  #navbar .right .item {
+    font-size: 1em;
   }
 }
 </style>

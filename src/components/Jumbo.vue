@@ -168,7 +168,8 @@ export default {
       text-align: center;
       text-shadow: 5px 5px 23px #000000;
       color: white;
-      font-size: 4em;
+      margin-bottom: 10%;
+      font-size: 3.5em;
       width: 75%;
       height: 100%;
       display: flex;
@@ -221,4 +222,11 @@ export default {
       transform: translateY(0)
     }
   }
+
+@media (max-width: 800px) {
+  .jumbo .label {
+    font-size: 2em;
+  }
+}
 </style>
+
