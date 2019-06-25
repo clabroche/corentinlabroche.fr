@@ -165,6 +165,7 @@ export default {
       position: absolute;
     }
     .label {
+      z-index: 1;
       text-align: center;
       text-shadow: 5px 5px 23px #000000;
       color: white;
