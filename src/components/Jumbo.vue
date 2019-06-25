@@ -59,7 +59,7 @@ export default {
   },
   methods: {
     async getQuote() {
-      const {data: quotes} = await axios.get('http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=30&callback=')
+      const {data: quotes} = await axios.get('http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=30&callback=&bogusQSvar=' + Math.random())
       const quote = quotes.filter(q => q.content.length < 100).pop()
       this.quote = quote.content
       this.author = quote.title
