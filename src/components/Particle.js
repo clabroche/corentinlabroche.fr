@@ -1,13 +1,13 @@
-function Particle(
-  x = Math.random() * window.innerWidth,
-  y = Math.random() * window.innerHeight,
-  rayon = 1,
+export default function Particle(
+  x,
+  y,
+  rayon,
   ctx
 ) {
   this.ctx = ctx
-  this.x = x;
-  this.y = y;
-  this.rayon = rayon;
+  this.x = x || Math.random() * window.innerWidth;
+  this.y = y || Math.random() * window.innerHeight;
+  this.rayon = rayon || 1;
   this.angle = Math.random() * 360;
   this.speed = Math.floor((Math.random() * 2)) + 1;
 }
