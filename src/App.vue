@@ -5,6 +5,7 @@
       <jumbo></jumbo>
       <input class="filter" type="text" v-model="filterData" @input="scroll" ref="input" placeholder="Filter...">
       <cards header="Fractals" :projects="fractalsProjectsFiltered"/>
+      <cards header="Utilities" :projects="utilitiesProjectsFiltered"/>
       <cards header="CLI (Command Line Interface)" :projects="cliFiltered"/>
       <cards header="Mobile" :projects="mobileFiltered"/>
       <cards header="Games" :projects="gamesFiltered"/>
@@ -39,6 +40,9 @@ export default {
     webPOCFiltered() {
       return this.filter(this.webPOC)
     },
+    utilitiesProjectsFiltered() {
+      return this.filter(this.utilities)
+    },
   },
   data() {
     return {
@@ -68,6 +72,17 @@ export default {
             {type: 'github', url: 'https://github.com/clabroche/SandPile'},
           ]
         }
+      ],
+      utilities: [
+        {
+          img: 'img/dice.png',
+          header:'Random app',
+          description:'Randomize a set of word or click on a dice to get a number. Designed to be used on mobile.',
+          links: [
+            {type: 'github', url: 'https://github.com/clabroche/randomapp'},
+            {type: 'globe', url: 'http://corentinlabroche.fr:9092'},
+          ]
+        },
       ],
       cli: [
         {
