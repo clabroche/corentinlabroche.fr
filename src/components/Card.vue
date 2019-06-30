@@ -11,6 +11,7 @@
           <i :class="{
             'fab fa-github': link.type === 'github',
             'fab fa-npm': link.type === 'npm',
+            'fab fa-android': link.type === 'android',
             'fas fa-globe': link.type === 'globe',
           }"></i>
         </a>
@@ -79,7 +80,6 @@ export default {
     align-items: center;
     padding: 10px;
     box-sizing: border-box;
-    cursor: pointer;
     background-color: rgba(0,0,0,0.8);
     transition: 300ms;
   }

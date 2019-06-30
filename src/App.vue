@@ -5,9 +5,8 @@
       <jumbo></jumbo>
       <input class="filter" type="text" v-model="filterData" @input="scroll" ref="input" placeholder="Filter...">
       <cards header="Fractals" :projects="fractalsProjectsFiltered"/>
-      <cards header="Utilities" :projects="utilitiesProjectsFiltered"/>
       <cards header="CLI (Command Line Interface)" :projects="cliFiltered"/>
-      <cards header="Mobile" :projects="mobileFiltered"/>
+      <cards header="Mobile" :projects="androidFiltered"/>
       <cards header="Games" :projects="gamesFiltered"/>
       <cards header="Web POC" :projects="webPOCFiltered"/>
     </div>
@@ -40,8 +39,8 @@ export default {
     webPOCFiltered() {
       return this.filter(this.webPOC)
     },
-    utilitiesProjectsFiltered() {
-      return this.filter(this.utilities)
+    androidFiltered() {
+      return this.filter(this.android)
     },
   },
   data() {
@@ -73,14 +72,24 @@ export default {
           ]
         }
       ],
-      utilities: [
+      android: [
         {
+          img: 'img/rhea.png',
+          header:'Rhea',
+          description:'Make your shopping cart, manage your inventory, plan your meals for week, import recipe.',
+          links: [
+            {type: 'github', url: 'https://github.com/clabroche/rhea-client'},
+            {type: 'github', url: 'https://github.com/clabroche/rhea-API'},
+            {type: 'android', url: 'http://corentinlabroche.fr:3000/rhea.apk'},
+          ]
+        }, {
           img: 'img/dice.png',
           header:'Random app',
           description:'Randomize a set of word or click on a dice to get a number. Designed to be used on mobile.',
           links: [
             {type: 'github', url: 'https://github.com/clabroche/randomapp'},
             {type: 'globe', url: 'http://corentinlabroche.fr:9092'},
+            {type: 'android', url: 'https://github.com/clabroche/randomapp/raw/master/src-cordova/app-debug.apk'},
           ]
         },
       ],
@@ -173,8 +182,6 @@ export default {
           ]
         },
       ],
-      mobile: [
-      ]
     }
   },
   methods: {
