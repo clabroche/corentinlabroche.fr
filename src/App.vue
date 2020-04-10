@@ -78,9 +78,8 @@ export default {
           header:'Rhea',
           description:'Make your shopping cart, manage your inventory, plan your meals for week, import recipe.',
           links: [
-            {type: 'github', url: 'https://github.com/clabroche/rhea-client'},
-            {type: 'github', url: 'https://github.com/clabroche/rhea-API'},
-            {type: 'android', url: 'http://corentinlabroche.fr:3000/rhea.apk'},
+            {type: 'github', url: 'https://github.com/clabroche/rhea'},
+            {type: 'android', url: 'https://rhea.corentinlabroche.fr/rhea.apk'},
           ]
         }, {
           img: 'img/dice.png',
@@ -88,7 +87,7 @@ export default {
           description:'Randomize a set of word or click on a dice to get a number. Designed to be used on mobile.',
           links: [
             {type: 'github', url: 'https://github.com/clabroche/randomapp'},
-            {type: 'globe', url: 'http://corentinlabroche.fr:9092'},
+            {type: 'globe', url: 'https://randomapp.corentinlabroche.fr/randomapp.apk'},
             {type: 'android', url: 'https://github.com/clabroche/randomapp/raw/master/src-cordova/app-debug.apk'},
           ]
         },
