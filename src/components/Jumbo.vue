@@ -59,10 +59,13 @@ export default {
   },
   methods: {
     async getQuote() {
-      const {data: quotes} = await axios.get('http://quotesondesign.com/wp-json/posts?filter[orderby]=rand&filter[posts_per_page]=30&callback=&bogusQSvar=' + Math.random())
-      const quote = quotes.filter(q => q.content.length < 100).pop()
-      this.quote = quote.content
-      this.author = quote.title
+      const {data: quotes} = await axios.get('https://quotesondesign.com/wp-json/wp/v2/posts?filter[orderby]=rand&filter[posts_per_page]=30&callback=&bogusQSvar=' + Math.random())
+      const quote = quotes.filter(q => q.content.rendered.length < 100).pop()
+      if(!quote) {
+        return this.getQuote()
+      }
+      this.quote = quote.content.rendered
+      this.author = quote.title.rendered
     },
     resizeCanvas() {
       return this.canvas.width = this.canvas.parentElement.offsetWidth ;
