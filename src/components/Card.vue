@@ -7,7 +7,7 @@
         {{project.header}}
     </div>
     <div class="links" >
-        <a v-for="link of project.links " :key="link.type" target="_blank" :href="link.url">
+        <a v-for="(link, i) of project.links " :key="link.type+''+i" target="_blank" :href="link.url">
           <i :class="{
             'fab fa-github': link.type === 'github',
             'fab fa-npm': link.type === 'npm',
