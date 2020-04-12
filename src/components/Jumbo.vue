@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Particle from './Particle'
+import Particles from './Particles'
 import axios from 'axios'
 export default {
   name: 'Home',
@@ -26,9 +26,6 @@ export default {
       frequency: .01,
       speed: 0,
       frames: 0,
-      color: '100,100,100',
-      particles: [],
-      distanceLink: 100,
       color1: '#004E6A',
       color2: '#002B3B',
       color3: '#003C52',
@@ -36,7 +33,8 @@ export default {
       color5: '#002B3B',
       color6: '#00222F',
       quote: '',
-      author: ''
+      author: '',
+      particles: null
     }
   },
   async mounted() {
@@ -49,7 +47,8 @@ export default {
       this.w = this.resizeCanvas()
       this.resize()
     }, 250))
-    this.seed()
+    this.particles = new Particles(this.canvas)
+    this.particles.seed()
     this.draw()
     this.getQuote()
     setInterval(() => {
@@ -92,49 +91,14 @@ export default {
         timeoutId = setTimeout(() => fn.apply(this, args), ms);
       }
     },
-    sqr(a) { return a * a },
-    distance(pt1, pt2) {
-      return Math.sqrt(this.sqr(pt2.y - pt1.y) + this.sqr(pt2.x - pt1.x));
-    },
-    seed(density = 50) {
-      density = 100 - density
-      density = 10000
-      density = (this.w * this.h) / (density);
-      this.particles = Array(Math.floor(density)).fill('').map(()=> new Particle(null, null, null, this.ctx))
-    },
-    drawStars() {
-      this.particles.map((particle,i) => {
-        const windowX = window.innerWidth
-        const windowY = window.innerHeight
-        if ((particle.x > 0 && particle.x < windowX) && (particle.y > 0 && particle.y < windowY)) 
-          particle.move();
-        else {
-          this.particles.splice(i, 1);
-          this.particles.push(new Particle(null, null, null, this.ctx))
-        }
-      });
-      for (let i = 0; i < this.particles.length / 2; i++) {
-        const particle1 = this.particles[i];
-        for (let j = 0; j < this.particles.length; j++) {
-          const particle2 = this.particles[j];
-          const distance = this.distance(particle1, particle2);
-          if(distance < this.distanceLink) {
-            this.ctx.strokeStyle = `rgba(${this.color},${1 - distance/this.distanceLink} )`
-            this.ctx.beginPath();
-            this.ctx.moveTo(particle1.x, particle1.y);
-            this.ctx.lineTo(particle2.x, particle2.y)
-            this.ctx.stroke()
-          }
-        }
-      } 
-    },
+    
+    
     draw() {
       this.frames++
       this.speed = this.frames / 500;
     
-      // ctx.clearRect(0, 0, w, h);
       this.canvas.width = this.w
-      this.drawStars()
+      this.particles.drawStars()
       
       this.drawSine((x, frequency, speed, amplitude) => {
         return Math.sin(x * frequency + speed *2) * amplitude / 4

@@ -1,0 +1,48 @@
+import Particle from './Particle'
+
+export default function Particles(canvas) {
+  this.ctx = canvas.getContext('2d')
+  this.w = canvas.width
+  this.h = canvas.height
+  this.particles = []
+  this.distanceLink = 100,
+  this.color = '100,100,100'
+
+}
+
+Particles.prototype.seed = function(density = 50) {
+  density = 100 - density
+  density = 10000
+  density = (this.w * this.h) / (density);
+  this.particles = Array(Math.floor(density)).fill('').map(() => new Particle(null, null, null, this.ctx))
+},
+Particles.prototype.drawStars = function() {
+  this.particles.map((particle, i) => {
+    const windowX = window.innerWidth
+    const windowY = window.innerHeight
+    if ((particle.x > 0 && particle.x < windowX) && (particle.y > 0 && particle.y < windowY))
+      particle.move();
+    else {
+      this.particles.splice(i, 1);
+      this.particles.push(new Particle(null, null, null, this.ctx))
+    }
+  });
+  for (let i = 0; i < this.particles.length / 2; i++) {
+    const particle1 = this.particles[i];
+    for (let j = 0; j < this.particles.length; j++) {
+      const particle2 = this.particles[j];
+      const distance = distanceFun(particle1, particle2);
+      if (distance < this.distanceLink) {
+        this.ctx.strokeStyle = `rgba(${this.color},${1 - distance / this.distanceLink} )`
+        this.ctx.beginPath();
+        this.ctx.moveTo(particle1.x, particle1.y);
+        this.ctx.lineTo(particle2.x, particle2.y)
+        this.ctx.stroke()
+      }
+    }
+  }
+}
+function distanceFun(pt1, pt2) {
+  return Math.sqrt(sqr(pt2.y - pt1.y) + sqr(pt2.x - pt1.x));
+}
+function sqr(a) { return a * a }
