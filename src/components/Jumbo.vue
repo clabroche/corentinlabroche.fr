@@ -60,7 +60,7 @@ export default {
   methods: {
     async getQuote() {
       const {data: quotes} = await axios.get('https://quotesondesign.com/wp-json/wp/v2/posts?filter[orderby]=rand&filter[posts_per_page]=30&callback=&bogusQSvar=' + Math.random())
-      const quote = quotes.filter(q => q.content.rendered.length < 100).pop()
+      const quote = this.findValidQuote(quotes)
       if(!quote) {
         return this.getQuote()
       }
@@ -75,6 +75,15 @@ export default {
       this.canvas.width = this.w
       this.canvas.height = this.h
       return this.w
+    },
+    findValidQuote(quotes) {
+      const quoteIndex = Math.floor(Math.random() * quotes.length -1)
+      const quote = quotes[quoteIndex]
+      if(!quote || !quote.content || !quote.content.rendered || quote.content.rendered.length > 100) {
+        quotes.splice(quoteIndex, 1)
+        return this.findValidQuote(quotes)
+      }
+      return quote
     },
     debounce(fn, ms = 0) {
       let timeoutId;
