@@ -12,7 +12,9 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "axios": "^0.19.2",
     "core-js": "^2.6.11",
+    "dayjs": "^1.8.24",
     "express": "^4.17.1",
+    "stats.js": "^0.17.0",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6"
   },

@@ -2,78 +2,78 @@
   <div class="jumbo">
     <canvas ref="canvas"></canvas>
     <transition name="slide-fade">
-      <div class="label" v-if="quote && author">
-        <div v-html="quote"></div>
-        <div class="author">"{{author}}"</div>
-      </div>
+      <component :is="components[activeComponentIndex]"></component>
     </transition>
     <i class="fas fa-chevron-down bottom"></i>
   </div>
 </template>
 
 <script>
-import Particles from './Particles'
-import axios from 'axios'
+import Particles from './JumboComponents/backgrounds/Particles'
+import Waves from './JumboComponents/backgrounds/Waves'
+import WelcomeVue from './JumboComponents/Welcome.vue'
+import WeatherVue from './JumboComponents/Weather.vue'
+// import fps from './FPS'
 export default {
   name: 'Home',
+  components: {
+    'welcome': WelcomeVue,
+    'weather': WeatherVue
+  },
   data() {
     return {
       canvas: null,
       ctx: null,
       h: null,
       w: null,
-      amplitude: 100,
-      frequency: .01,
-      speed: 0,
       frames: 0,
-      color1: '#004E6A',
-      color2: '#002B3B',
-      color3: '#003C52',
-      color4: '#00222F',
-      color5: '#002B3B',
-      color6: '#00222F',
       quote: '',
       author: '',
-      particles: null
+      particles: null,
+      components: [
+        // 'welcome',
+        'weather',
+      ],
+      activeComponentIndex: 0
     }
   },
   async mounted() {
     this.canvas = this.$refs.canvas
     this.ctx = this.canvas.getContext("2d");
-    this.w  = this.resizeCanvas()
-    this.ctx.lineWidth = 4;
-    this.resize()
+    this.resizeCanvas()
     window.addEventListener('resize', this.debounce(() => {
-      this.w = this.resizeCanvas()
-      this.resize()
+      this.resizeCanvas()
     }, 250))
     this.particles = new Particles(this.canvas)
+    this.waves = new Waves(this.canvas)
+    this.resize()
     this.particles.seed()
     this.draw()
-    this.getQuote()
-    setInterval(() => {
-      this.quote = ''
-      this.getQuote()
-    }, 7500);
+    this.interval = setInterval(() => {
+      this.activeComponentIndex = this.activeComponentIndex >= this.components.length - 1
+        ? 0
+        : this.activeComponentIndex + 1
+    }, 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.interval)
   },
   methods: {
-    async getQuote() {
-      const {data: quotes} = await axios.get('https://quotesondesign.com/wp-json/wp/v2/posts?filter[orderby]=rand&filter[posts_per_page]=30&callback=&bogusQSvar=' + Math.random())
-      const quote = this.findValidQuote(quotes)
-      if(!quote) {
-        return this.getQuote()
-      }
-      this.quote = quote.content.rendered
-      this.author = quote.title.rendered
-    },
+    // async getQuote() {
+    //   const {data: quotes} = await axios.get('https://quotesondesign.com/wp-json/wp/v2/posts?filter[orderby]=rand&filter[posts_per_page]=30&callback=&bogusQSvar=' + Math.random())
+    //   const quote = this.findValidQuote(quotes)
+    //   if(!quote) {
+    //     return this.getQuote()
+    //   }
+    //   this.quote = quote.content.rendered
+    //   this.author = quote.title.rendered
+    // },
     resizeCanvas() {
-      return this.canvas.width = this.canvas.parentElement.offsetWidth ;
+      this.canvas.width = this.canvas.parentElement.offsetWidth ;
     },
     resize() {
-      this.h = window.innerHeight - 75
-      this.canvas.width = this.w
-      this.canvas.height = this.h
-      return this.w
+      this.canvas.height = window.innerHeight - 75
+      return this.canvas.width
     },
     findValidQuote(quotes) {
       const quoteIndex = Math.floor(Math.random() * quotes.length -1)
@@ -91,40 +91,17 @@ export default {
         timeoutId = setTimeout(() => fn.apply(this, args), ms);
       }
     },
-    
-    
     draw() {
+      // fps.begin()
       this.frames++
       this.speed = this.frames / 500;
-    
-      this.canvas.width = this.w
+      this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height)
       this.particles.drawStars()
-      
-      this.drawSine((x, frequency, speed, amplitude) => {
-        return Math.sin(x * frequency + speed *2) * amplitude / 4
-      }, 60, this.color1, this.color2)
-      this.drawSine((x, frequency, speed, amplitude) => {
-        return Math.sin(x * frequency + speed * 5) * amplitude / 3
-      }, 30, this.color3, this.color4)
-      this.drawSine((x, frequency, speed, amplitude) => {
-        return Math.sin(x * frequency + speed *10) * amplitude / 3
-      }, 0, this.color5, this.color6)
+      this.waves.drawSines(this.frames / 500)
+      // fps.end()
       window.requestAnimationFrame(this.draw);
     },
-    drawSine(yFun, offset = 40, color, fillColor) {
-      this.ctx.beginPath();
-      this.ctx.strokeStyle = fillColor;
-      this.ctx.fillStyle = color;
-      this.ctx.moveTo(0, this.h);
-      for (let x = 0; x < this.w; x++) {
-        this.y = yFun(x, this.frequency, this.speed, this.amplitude)
-        this.ctx.lineTo(x, this.y + this.h -100 - offset);
-      }
-      this.ctx.lineTo(this.w, this.h);
-      this.ctx.lineTo(0, this.h);
-      this.ctx.stroke();
-      this.ctx.fill()
-    }
+    
   }
 }
 </script>
@@ -143,6 +120,7 @@ export default {
     .label {
       z-index: 1;
       text-align: center;
+      position: absolute;
       text-shadow: 5px 5px 23px #000000;
       color: white;
       margin-bottom: 10%;
@@ -153,14 +131,7 @@ export default {
       justify-content: center;
       flex-direction: column;
       align-items: center;
-      .author {
-        text-align: end;
-        justify-self: flex-end;
-        align-self: flex-end;
-        font-size: 0.5em;
-        font-style: italic;
-        text-decoration: underline;
-      }
+      
     }
   }
   .bottom {

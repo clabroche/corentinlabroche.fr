@@ -1,19 +1,18 @@
 import Particle from './Particle'
 
 export default function Particles(canvas) {
+  this.canvas = canvas
   this.ctx = canvas.getContext('2d')
-  this.w = canvas.width
-  this.h = canvas.height
+  this.canvas.height = canvas.height
   this.particles = []
   this.distanceLink = 100,
   this.color = '100,100,100'
-
 }
 
 Particles.prototype.seed = function(density = 50) {
   density = 100 - density
   density = 10000
-  density = (this.w * this.h) / (density);
+  density = (this.canvas.width * this.canvas.height) / (density);
   this.particles = Array(Math.floor(density)).fill('').map(() => new Particle(null, null, null, this.ctx))
 },
 Particles.prototype.drawStars = function() {

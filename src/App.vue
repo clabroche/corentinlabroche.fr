@@ -17,6 +17,7 @@
 import NavbarVue from './components/Navbar.vue';
 import JumboVue from './components/Jumbo.vue';
 import CardsVue from './components/Cards.vue';
+
 export default {
   components: {
     navbar: NavbarVue,
