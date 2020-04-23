@@ -16,13 +16,11 @@ jobs:
 
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
-      env: 
-        VUE_APP_WEATHER_APIKEY: ${{secrets.VUE_APP_WEATHER_APIKEY}}
       with:
         name: clabroche/docker-registry/corentinlabrochefr
         username: ${{ secrets.DOCKER_HUB_USER }}
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
         registry: docker.pkg.github.com
         tags: "latest,${{ env.RELEASE_VERSION }}"
-        buildargs: VUE_APP_WEATHER_APIKEY=${{secrets.VUE_APP_WEATHER_APIKEY}}
+        buildargs: --build-arg VUE_APP_WEATHER_APIKEY=${{secrets.VUE_APP_WEATHER_APIKEY}}
   
