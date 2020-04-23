@@ -15,4 +15,7 @@ RUN mkdir /corentinlabroche.fr/dist
 COPY --from=builder /corentinlabroche.fr/node_modules ./node_modules
 COPY --from=builder /corentinlabroche.fr/dist ./dist
 COPY --from=builder /corentinlabroche.fr/server.js .
+ARG VUE_APP_WEATHER_APIKEY
+ENV VUE_APP_WEATHER_APIKEY=$VUE_APP_WEATHER_APIKEY
+
 CMD ["node", "server"]
