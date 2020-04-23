@@ -2,7 +2,7 @@
   <div class="jumbo">
     <canvas ref="canvas"></canvas>
     <transition name="slide-fade">
-      <component :is="components[activeComponentIndex]"></component>
+      <component :is="components[activeComponentIndex].name"></component>
     </transition>
     <i class="fas fa-chevron-down bottom"></i>
   </div>
@@ -31,8 +31,8 @@ export default {
       author: '',
       particles: null,
       components: [
-        // 'welcome',
-        'weather',
+        {name: 'welcome', duration: 2000, onlyOnce: true},  
+        {name: 'weather', duration: 10000},  
       ],
       activeComponentIndex: 0
     }
@@ -49,11 +49,7 @@ export default {
     this.resize()
     this.particles.seed()
     this.draw()
-    this.interval = setInterval(() => {
-      this.activeComponentIndex = this.activeComponentIndex >= this.components.length - 1
-        ? 0
-        : this.activeComponentIndex + 1
-    }, 1000);
+    this.carousel()
   },
   beforeDestroy() {
     clearInterval(this.interval)
@@ -68,6 +64,14 @@ export default {
     //   this.quote = quote.content.rendered
     //   this.author = quote.title.rendered
     // },
+    carousel() {
+      setTimeout(() => {
+        this.activeComponentIndex = this.activeComponentIndex >= this.components.length - 1
+          ? 1
+          : this.activeComponentIndex + 1
+        this.carousel()
+      }, this.components[this.activeComponentIndex].duration);
+    },
     resizeCanvas() {
       this.canvas.width = this.canvas.parentElement.offsetWidth ;
     },
