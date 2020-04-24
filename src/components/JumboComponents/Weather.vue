@@ -112,7 +112,7 @@ export default {
   },
   methods: {
     getIcon(icon) {
-      return `http://openweathermap.org/img/wn/${icon}@2x.png`
+      return `https://openweathermap.org/img/wn/${icon}@2x.png`
     },
     formatDate(unix) {
       const dayName = dayjs.unix(unix).locale('fr').format('dddd')
