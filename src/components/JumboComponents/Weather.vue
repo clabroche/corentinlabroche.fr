@@ -125,7 +125,7 @@ export default {
           this.geo.lon = geo.coords.longitude
           this.getWeather()
           this.initialized = true
-        }, function() {
+        }, () => {
           this.initialized = false
           this.error = "Donnez l'accés à votre position pour que je puisse vous donnez la météo"
         });
