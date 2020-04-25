@@ -30,7 +30,8 @@ export default {
   display: flex;
   padding: 40px;
   box-sizing: border-box;
-  width: 100%;
+  width: 90%;
+  margin: auto;
   flex-direction: column;
   h2 {
     margin-top: 0;
@@ -41,9 +42,8 @@ export default {
   }
   .cards {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    overflow-x: auto;
-    height: 290px;
-  }
+    }
 }
 </style>
