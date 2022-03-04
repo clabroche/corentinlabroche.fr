@@ -1,5 +1,5 @@
-FROM alpine:3.11 as builder
-RUN apk --no-cache add gcc g++ make python nodejs npm
+FROM alpine:3.14 as builder
+RUN apk --no-cache add gcc g++ make python3 nodejs npm
 
 WORKDIR /corentinlabroche.fr
 COPY package-lock.json ./package-lock.json
@@ -10,7 +10,7 @@ ARG VITE_WEATHER_APIKEY
 ENV VITE_WEATHER_APIKEY=$VITE_WEATHER_APIKEY
 RUN npm run build && rm -rf node_modules && npm ci --production
 
-FROM alpine:3.11
+FROM alpine:3.14
 RUN apk --no-cache add nodejs
 WORKDIR /corentinlabroche.fr
 RUN mkdir /corentinlabroche.fr/dist
