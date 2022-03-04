@@ -1,163 +1,184 @@
 <template>
   <div class="jumbo">
     <canvas ref="canvas"></canvas>
+    <div id="logo" class="item">
+      <img src="@/assets/img/mountains.svg" alt="">
+    </div>
+    <div class="waves">
+      <div class="wave"></div>
+      <div class="wave"></div>
+    </div>
+    <div class="goto-bottom left chevron" @click="previous">
+      <font-awesome-icon :icon="['fas', 'chevron-left']" class="bottom chevron"/>
+    </div>
+    <div class="goto-bottom right chevron" @click="next">
+      <font-awesome-icon :icon="['fas', 'chevron-right']" class="bottom chevron"/>
+    </div>
     <transition name="slide-fade">
-      <component :is="components[activeComponentIndex].name"></component>
+      <component :is="components[activeComponentIndex].comp"/>
     </transition>
-    <i class="fas fa-chevron-down bottom"></i>
+    <div class="goto-bottom" @click="scroll">
+      <label>Voir la suite</label>
+      <font-awesome-icon :icon="['fas', 'chevron-down']" class="bottom chevron"/>
+    </div>
   </div>
 </template>
 
-<script>
-import Particles from './JumboComponents/backgrounds/Particles'
-import Waves from './JumboComponents/backgrounds/Waves'
-import WelcomeVue from './JumboComponents/Welcome.vue'
-import WeatherVue from './JumboComponents/Weather.vue'
-// import fps from './FPS'
-export default {
-  name: 'Home',
-  components: {
-    'welcome': WelcomeVue,
-    'weather': WeatherVue
-  },
-  data() {
-    return {
-      canvas: null,
-      ctx: null,
-      h: null,
-      w: null,
-      frames: 0,
-      quote: '',
-      author: '',
-      particles: null,
-      components: [
-        {name: 'welcome', duration: 2000, onlyOnce: true},  
-        {name: 'weather', duration: 10000},  
-      ],
-      activeComponentIndex: 0
-    }
-  },
-  async mounted() {
-    this.canvas = this.$refs.canvas
-    this.ctx = this.canvas.getContext("2d");
-    this.resizeCanvas()
-    window.addEventListener('resize', this.debounce(() => {
-      this.resizeCanvas()
-    }, 250))
-    this.particles = new Particles(this.canvas)
-    this.waves = new Waves(this.canvas)
-    this.resize()
-    this.particles.seed()
-    this.draw()
-    this.carousel()
-  },
-  beforeDestroy() {
-    clearInterval(this.interval)
-  },
-  methods: {
-    // async getQuote() {
-    //   const {data: quotes} = await axios.get('https://quotesondesign.com/wp-json/wp/v2/posts?filter[orderby]=rand&filter[posts_per_page]=30&callback=&bogusQSvar=' + Math.random())
-    //   const quote = this.findValidQuote(quotes)
-    //   if(!quote) {
-    //     return this.getQuote()
-    //   }
-    //   this.quote = quote.content.rendered
-    //   this.author = quote.title.rendered
-    // },
-    carousel() {
-      setTimeout(() => {
-        this.activeComponentIndex = this.activeComponentIndex >= this.components.length - 1
-          ? 1
-          : this.activeComponentIndex + 1
-        this.carousel()
-      }, this.components[this.activeComponentIndex].duration);
-    },
-    resizeCanvas() {
-      this.canvas.width = this.canvas.parentElement.offsetWidth ;
-    },
-    resize() {
-      this.canvas.height = window.innerHeight - 75
-      return this.canvas.width
-    },
-    findValidQuote(quotes) {
-      const quoteIndex = Math.floor(Math.random() * quotes.length -1)
-      const quote = quotes[quoteIndex]
-      if(!quote || !quote.content || !quote.content.rendered || quote.content.rendered.length > 100) {
-        quotes.splice(quoteIndex, 1)
-        return this.findValidQuote(quotes)
-      }
-      return quote
-    },
-    debounce(fn, ms = 0) {
-      let timeoutId;
-      return function (...args) {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => fn.apply(this, args), ms);
-      }
-    },
-    draw() {
-      // fps.begin()
-      this.frames++
-      this.speed = this.frames / 500;
-      this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height)
-      this.particles.drawStars()
-      this.waves.drawSines(this.frames / 500)
-      // fps.end()
-      window.requestAnimationFrame(this.draw);
-    },
-    
+<script setup>
+import {onMounted, ref, defineAsyncComponent} from 'vue'
+import Particles from './JumboComponents/backgrounds/Particles';
+const canvas = ref(null)
+onMounted(() => {
+  canvas.value.width = window.innerWidth
+  canvas.value.height = window.innerHeight
+  const particles = new Particles(canvas.value)
+  particles.seed()
+  function step() {
+    particles.drawStars()
+    requestAnimationFrame(step);
   }
+  requestAnimationFrame(step);
+})
+const components = [
+  {comp: defineAsyncComponent(() => import('./JumboComponents/Welcome.vue')), name: 'Welcome', duration: 4000, onlyOnce: true},  
+  {comp: defineAsyncComponent(() => import('./JumboComponents/Weather.vue')), name: 'Weather', duration: 10000},  
+]
+const activeComponentIndex = ref(0)
+
+const scroll = () => {
+  document.querySelector('.main-container').scrollTo({top: window.innerHeight - 60, behavior: "smooth"})
+}
+
+const next = () => {
+  activeComponentIndex.value = activeComponentIndex.value >= components.length - 1
+      ? 0
+      : activeComponentIndex.value + 1
+}
+const previous = () => {
+  activeComponentIndex.value = activeComponentIndex.value <= 0
+      ? components.length - 1
+      : activeComponentIndex.value - 1
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+.label {
+  max-width: 100vw;
+  z-index: 1;
+  text-align: center;
+  position: absolute;
+  text-shadow: 5px 5px 23px var(--accent-color-light);
+  color: white;
+  font-size: 3.5em;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255,255,255,0.1);
+  background-color: var(--accent-color-transparent);
+  border-radius: 10px;
+  padding: 40px;
+  box-sizing: border-box;
+  box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.3);
+}
   .jumbo {
-    height: calc(100vh - 75px);
-    background-color: #033142;
+    height: 100vh;
+    background-color: #022b36;
     display: flex;
+    overflow: hidden;
     justify-content: center;
     align-items: center;
+    position: relative;
+    transition: 300ms;
+    #logo {
+      height: 100%;
+      position: absolute;
+      height: 100vh;
+      width: 100vw;
+      img {
+        filter: brightness(0.9);
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        object-position: left bottom;
+      }
+    }
     canvas {
       position: absolute;
     }
-    .label {
-      z-index: 1;
-      text-align: center;
-      position: absolute;
-      text-shadow: 5px 5px 23px #000000;
-      color: white;
-      margin-bottom: 10%;
-      font-size: 3.5em;
-      width: 75%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-      
-    }
+    
   }
-  .bottom {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+  .chevron {
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+    border-radius: 50%;
     display: flex;
     justify-content: center;
     font-size: 3em;
     color: white;
     text-shadow: 5px 5px 23px #000000;
+    z-index: 1;
+    transition: 300ms;
+    cursor: pointer;
+    &.left, &.right {
+      position: absolute;
+      top: 50vh;
+      z-index: 2;
+      font-size: 3em;
+    }
+    &.left {
+      left: 0;
+    }
+
+    &.right {
+      right: 0;
+    }
+  }
+  .goto-bottom {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     animation-name: bounce;
     animation-duration: 10000ms;
     animation-iteration-count: infinite;
     animation-fill-mode: forwards;
-    height: 1.5em;
+    z-index: 1;
+    label {
+      opacity: 0;
+      transition: 300ms;
+      cursor: pointer;
+    }
+    &:hover {
+      .bottom, label {
+        background-color: var(--accent-color);
+      }
+      label {
+        padding: 10px 40px;
+        border-radius: 100px;
+        transform: translateY(15px);
+        font-size: 1.4em;
+        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.377);
+        opacity: 1;
+      }
+      .bottom {
+        width: 30px;
+        height: 30px;
+        box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.377);
+      }
+    }
   }
   .slide-fade-enter-active, .slide-fade-leave-active {
-    transition: all .3s ease;
+    transition: all 0.5s ease;
   }
-  .slide-fade-enter, .slide-fade-leave-to {
-    transform: translateX(10px);
+  .slide-fade-enter-from, .slide-fade-leave-to {
+    transform: translateX(10px) scaleX(0);
+    transform-origin: left;
     opacity: 0;
   }
   @keyframes bounce {
@@ -176,8 +197,47 @@ export default {
   }
 
 @media (max-width: 800px) {
-  .jumbo .label {
+  .label {
     font-size: 2em;
+  }
+}
+
+.waves {
+  width: 100vw;
+  overflow: hidden;
+}
+.wave {
+  background: url(/img/wave.svg) repeat-x; 
+  position: absolute;
+  bottom: 0;
+  width: 6400px;
+  height: 198px;
+  animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) infinite;
+  transform: translate3d(0, 0, 0);
+}
+
+.wave:nth-of-type(2) {
+  bottom: 10px;
+  animation: wave 7s cubic-bezier( 0.36, 0.45, 0.63, 0.53) -.125s infinite, swell 6s ease -1.25s infinite;
+  opacity: 1;
+}
+
+
+@keyframes wave {
+  0% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: -1600px;
+  }
+}
+
+@keyframes swell {
+  0%, 100% {
+    transform: scaleY(1.2);
+  }
+  50% {
+    transform: scaleY(1);
   }
 }
 </style>

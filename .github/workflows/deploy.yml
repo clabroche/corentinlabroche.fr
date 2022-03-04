@@ -22,5 +22,5 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
         registry: docker.pkg.github.com
         tags: "latest,${{ env.RELEASE_VERSION }}"
-        buildargs: --build-arg VUE_APP_WEATHER_APIKEY=${{secrets.VUE_APP_WEATHER_APIKEY}}
+        buildargs: --build-arg VITE_WEATHER_APIKEY=${{secrets.VUE_APP_WEATHER_APIKEY}}
   

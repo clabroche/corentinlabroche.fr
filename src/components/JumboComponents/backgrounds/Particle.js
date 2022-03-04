@@ -17,7 +17,7 @@ Particle.prototype.draw = function () {
   this.ctx.fill()
 }
 Particle.prototype.move = function () {
-  this.ctx.fillStyle = `rgb(150, 150, 150)`
+  this.ctx.fillStyle = `rgb(255, 255, 255)`
   this.x += this.speed * Math.cos(this.angle * Math.PI / 180);
   this.y += this.speed * Math.sin(this.angle * Math.PI / 180);
   this.draw()

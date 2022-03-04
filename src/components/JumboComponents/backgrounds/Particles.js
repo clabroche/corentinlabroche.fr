@@ -6,16 +6,18 @@ export default function Particles(canvas) {
   this.canvas.height = canvas.height
   this.particles = []
   this.distanceLink = 100,
-  this.color = '100,100,100'
+  this.color = '255,255,255'
 }
 
 Particles.prototype.seed = function(density = 50) {
   density = 100 - density
-  density = 10000
+  density = 40000
   density = (this.canvas.width * this.canvas.height) / (density);
   this.particles = Array(Math.floor(density)).fill('').map(() => new Particle(null, null, null, this.ctx))
 },
 Particles.prototype.drawStars = function() {
+  this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+
   this.particles.map((particle, i) => {
     const windowX = window.innerWidth
     const windowY = window.innerHeight

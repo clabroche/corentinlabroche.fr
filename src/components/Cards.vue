@@ -1,38 +1,34 @@
 <template>
-  <div class="section" v-if="projects.length">
+<transition name="list">
+  <div class="root" v-if="projects.length">
     <h2>{{header}}</h2>
     <div class="cards">
-      <card 
-        v-for="project of projects" :key="project.header"
-        :project="project"
-      />
+        <card  v-for="project of projects" :key="project.header" :project="project"/>
     </div>
   </div>
+</transition>
 </template>
 
-<script>
-import CardVue from './Card.vue';
-export default {
-  name: 'HelloWorld',
-  props: {
-    header: String,
-    projects: {default: []}
-  },
-  components: {
-    card: CardVue,
-  }
-}
+<script setup>
+import Card from './Card.vue';
+import {defineProps} from "vue"
+
+defineProps({
+  header: String,
+  projects: {default: []}
+})
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-.section {
+.root {
   display: flex;
-  padding: 40px;
   box-sizing: border-box;
-  width: 90%;
-  margin: auto;
   flex-direction: column;
+  width: 100%;
+  &:first-of-type {
+    margin-top: 0;
+  }
   h2 {
     margin-top: 0;
     width: 100%;
@@ -41,9 +37,29 @@ export default {
     margin-bottom: 20px;
   }
   .cards {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+    gap: 40px;
+    width: 100%;
+  }
+}
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+  max-width: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 800px) {
+  .root {
+    .cards {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
+  }
 }
 </style>

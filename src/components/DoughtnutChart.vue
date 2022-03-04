@@ -14,40 +14,32 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import {defineProps, ref, watch} from 'vue'
+const props = defineProps({
+  value: {
+    type: Number
+  }
+})
 
-export default {
-  name: 'doughtnut-chart',
-  props: ['value'],
-  data() {
-    return {
-      percentage: null,
-      anim: 1,
-    }
-  },
-  created() {
-    this.calculatePercentage(this.value)
-  },
-  methods: {
-    calculatePercentage: function(value) {
-      if(!this.value) return
-      let newPercentage = (value * 100 / 200).toFixed(1)
-      if (newPercentage !== this.percentage) {
-        this.percentage = newPercentage
-        if (this.anim === 1) {
-          this.anim = 2
-        } else {
-          this.anim = 1
-        }
-      }
-    }
-  },
-  watch: {
-    value: function(value) {
-      this.calculatePercentage(value)
+const percentage = ref(null)
+const anim = ref(1)
+
+const calculatePercentage = value => {
+  if(!props.value) return
+  let newPercentage = (value * 100 / 200).toFixed(1)
+  if (newPercentage !== percentage.value) {
+    percentage.value = newPercentage
+    if (anim.value === 1) {
+      anim.value = 2
+    } else {
+      anim.value = 1
     }
   }
 }
+
+calculatePercentage(props.value)
+watch(() => props.value, () => calculatePercentage(props.value))
 </script>
 
 <style scoped lang="scss">
@@ -60,28 +52,10 @@ section {
 .circle {
   transform: rotate(-180deg);
   transform-origin: center;
+  transition: 300ms;
 }
 
 .info {
   opacity: 1
-}
-
-@for $i from 1 through 2 {
-  .circle-anim-#{$i} {
-    animation: chart-fill- + i 1s reverse
-  }
-  .info-anim-#{$i} {
-    animation: chart-appear- + i 1s forwards
-  }
-  @keyframes chart-fill-#{$i} {
-    to {
-      stroke-dasharray: 0 380;
-    }
-  }
-  @keyframes chart-appear-#{$i} {
-    to {
-      opacity: 1;
-    }
-  }
 }
 </style>

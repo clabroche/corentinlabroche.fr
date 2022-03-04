@@ -3,219 +3,219 @@
     <navbar></navbar>
     <div class="main-container">
       <jumbo></jumbo>
-      <input class="filter" type="text" v-model="filterData" @input="scroll" ref="input" placeholder="Filter...">
-      <cards header="Fractals" :projects="fractalsProjectsFiltered"/>
-      <cards header="CLI (Command Line Interface)" :projects="cliFiltered"/>
-      <cards header="Mobile" :projects="androidFiltered"/>
-      <cards header="Games" :projects="gamesFiltered"/>
-      <cards header="Web POC" :projects="webPOCFiltered"/>
+
+      <div class="section header">
+        <h2>Mes Skills</h2>
+      </div>
+      <div class="section header">
+        <skills></skills>
+      </div>
+
+      <div class="section header">
+        <h2>Mes projets</h2>
+        <input class="filter" type="text" v-model="filterData" @focusin="scroll" @input="scroll" ref="inputRef" placeholder="Filtrer...">
+      </div>
+
+      <div class="categories section">
+        <div class="category" :class="{active: !currentCategory}" @click="currentCategory = null; scroll()">
+          <div>Tous</div>
+        </div>
+        <div class="category" :class="{active: currentCategory === category.id}" @click="currentCategory = category.id; scroll()" v-for="category of categories" :key="category.label" :header="category.label">
+          <span>{{category.nb}}</span>
+          <div>{{category.label}}</div>
+        </div>
+      </div>
+      <div class="section projects">
+        <cards v-for="project of projects" :key="project.label" :header="project.label" :projects="project.values"/>
+        <div v-show="noResult" key="noResult" class="section no-result">
+          Je n'ai pas encore fait de projet concernant cette recherche. <br>
+          Peut-être bientôt !
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
-<script>
-import NavbarVue from './components/Navbar.vue';
-import JumboVue from './components/Jumbo.vue';
-import CardsVue from './components/Cards.vue';
-
-export default {
-  components: {
-    navbar: NavbarVue,
-    jumbo: JumboVue,
-    cards: CardsVue,
-  },
-  computed: {
-    fractalsProjectsFiltered() {
-      return this.filter(this.fractalsProjects)
-    },
-    cliFiltered() {
-      return this.filter(this.cli)
-    },
-    mobileFiltered() {
-      return this.filter(this.mobile)
-    },
-    gamesFiltered() {
-      return this.filter(this.games)
-    },
-    webPOCFiltered() {
-      return this.filter(this.webPOC)
-    },
-    androidFiltered() {
-      return this.filter(this.android)
-    },
-  },
-  data() {
-    return {
-      filterData: '',
-      fractalsProjects: [
-        {
-          img: 'img/fern.png',
-          header:'Barnsley fern',
-          description:'The Barnsley fern is a fractal named after the British mathematician Michael Barnsley who first described it in his book Fractals Everywhere. He made it to resemble the black spleenwort, Asplenium adiantum-nigrum.',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/barnsleyFern'},
-            {type: 'globe', url: 'https://clabroche.github.io/barnsleyFern'},
-          ]
-        }, {
-          img: 'img/sierpinski.png',
-          header:'Sierpiński triangle',
-          description:'The Sierpinski triangle, is a fractal and attractive fixed set with the overall shape of an equilateral triangle, subdivided recursively into smaller equilateral triangles.',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/sierpinski'},
-            {type: 'globe', url: 'https://clabroche.github.io/sierpinski'},
-          ]
-        }, {
-          img: 'img/sandpile.png',
-          header:'Abelian sandpile model',
-          description:'This slope builds up as "grains of sand" are randomly placed onto the pile, until the slope exceeds a specific threshold value at which time that site collapses transferring sand into the adjacent sites, increasing their slope.',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/SandPile'},
-          ]
-        }
-      ],
-      android: [
-        {
-          img: 'img/rhea.png',
-          header:'Rhea',
-          description:'Make your shopping cart, manage your inventory, plan your meals for week, import recipe.',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/rhea'},
-            {type: 'android', url: 'https://rhea.corentinlabroche.fr/rhea.apk'},
-          ]
-        }, {
-          img: 'img/dice.png',
-          header:'Random app',
-          description:'Randomize a set of word or click on a dice to get a number. Designed to be used on mobile.',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/randomapp'},
-            {type: 'globe', url: 'https://randomapp.corentinlabroche.fr/randomapp.apk'},
-            {type: 'android', url: 'https://github.com/clabroche/randomapp/raw/master/src-cordova/app-debug.apk'},
-          ]
-        },
-      ],
-      cli: [
-        {
-          img: 'img/stackmonitor.png',
-          header:'Stack monitor',
-          description:'Monitor processes as a stack. You have just to mount a stack with a config and launch this package to monitor processes.',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/stack-monitor'},
-            {type: 'npm', url: 'https://www.npmjs.com/package/@iryu54/stack-monitor'},
-          ]
-        }, {
-          img: 'img/objectvalidity.png',
-          header:'Object-validity',
-          description:'Validate a JS object or json against a Schema',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/object-validity'},
-            {type: 'npm', url: 'https://www.npmjs.com/package/@iryu54/object-validity'},
-          ]
-        }, {
-          img: 'img/gitmanagerjs.png',
-          header:'Gitmanagerjs',
-          description:'This module aims to use git programmatically because the command line returns success in stderr.',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/GitManager.js'},
-            {type: 'npm', url: 'https://www.npmjs.com/package/gitmanagerjs'},
-          ]
-        },  {
-          img: 'img/pdffigureextractor.png',
-          header:'Pdf-figure-extractor',
-          description:'Extract figure from pdf without text in it',
-          links: [
-            {type: 'github', url: 'https://github.com/Inist-CNRS/pdf-figure-extractor'},
-            {type: 'npm', url: 'https://www.npmjs.com/package/pdf-figure-extractor'},
-          ]
-        },  {
-          img: 'img/fbterm.png',
-          header:'Fbterm',
-          description:'Use facebook messenger inside a terminal.',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/fbTerm'},
-            {type: 'npm', url: 'https://www.npmjs.com/package/@iryu54/fbterm'},
-          ]
-        }, {
-          img: 'img/nmsjs.png',
-          header:'Nms-js',
-          description:'Decrypt output from commands.',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/nms-js'},
-            {type: 'npm', url: 'https://www.npmjs.com/package/@iryu54/nmsjs'},
-          ]
-        }, 
-      ],
-      games: [
-        {
-          img: 'img/minesweeper.png',
-          header:'Minesweeper',
-          description:'The objective of the game is to clear a rectangular board containing hidden "mines" or bombs without detonating any of them, with help from clues about the number of neighboring mines in each field.',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/minesweeper'},
-            {type: 'globe', url: 'http://corentinlabroche.fr:9090/games'},
-          ]
-        }, {
-          img: 'img/motsMeles.png',
-          header:'MotsMeles',
-          description:'Find all words in a grid full of letters.',
-          links: [
-            {type: 'github', url: 'https://clabroche.github.io/motsMeles/'},
-            {type: 'globe', url: 'https://clabroche.github.io/motsMeles/'},
-          ]
-        }, 
-      ],
-      webPOC: [
-        {
-          img: 'img/particles.png',
-          header:'Particle',
-          description:'Display connected particles in a canvas. Need to be exported as library',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/particle'},
-            {type: 'globe', url: 'https://clabroche.github.io/particle'},
-          ]
-        }, {
-          img: 'img/rain.png',
-          header:'Rain',
-          description:'Display a falling down rain in canvas. Need to be exported as library',
-          links: [
-            {type: 'github', url: 'https://github.com/clabroche/rain'},
-            {type: 'globe', url: 'https://clabroche.github.io/rain/'},
-          ]
-        },
-      ],
-    }
-  },
-  methods: {
-    scroll() {
-      this.$refs.input.scrollIntoView({
-            behavior: 'smooth',  block: "start"
-        });
-    },
-    filter(projects) {
-      return projects.filter(p => this.filterData ? p.header.toUpperCase().includes(this.filterData.toUpperCase()) : true)
-    }
-  }
+<script setup>
+import Navbar from './components/Navbar.vue';
+import Jumbo from './components/Jumbo.vue';
+import Cards from './components/Cards.vue';
+import { computed, ref } from 'vue';
+import allProjects from './services/projects'
+import Skills from './components/Skills.vue'
+const filterData = ref('')
+const filter = (projects) => {
+  return projects.filter(p => filterData.value ? p.header.toUpperCase().includes(filterData.value.toUpperCase()) : true)
 }
+
+const inputRef = ref()
+const scroll = () => {
+  document.querySelector('.main-container').scrollTo({top: inputRef.value.offsetTop - 100, behavior: "smooth"})
+}
+const currentCategory = ref()
+
+const projects = computed(() => {
+  const filteredProjects = Object.keys(allProjects)
+    .map(key => ({...allProjects[key], id: key}))
+    .filter(project => currentCategory.value ? project.id === currentCategory.value : true)
+    .sort((a,b) => a.label.localeCompare(b.label))
+  
+  return filteredProjects.reduce((projects, project) => {
+    project.values = filter(project.values)
+    return projects
+  },filteredProjects)
+})
+const categories = computed(() => Object.keys(allProjects)
+    .map(key => ({...allProjects[key], id: key, nb: projects.value.find(a => a.id === key)?.values?.length || 0}))
+    .sort((a,b) => a.label.localeCompare(b.label)))
+const noResult = computed(() => !projects.value.length)
 </script>
 
 <style lang="scss">
-@import url('../node_modules/@fortawesome/fontawesome-free/css/all.min.css');
 @import url('./assets/font/jost.css');
+
+:root {
+  --accent-color: #245c64;
+  --accent-color-light: #3b7b85;
+  --accent-color-lighter: #6aa9b3;
+  --accent-color-transparent: #03434ddd;
+}
 body {
-  background-color: #f2f2f2;
-  font-family: 'Jost';
-  margin: 0;
-  min-height: 100vh;
+  display: inherit;
 }
 .main-container {
-  height: calc(100vh - 75px);
+  height: 100vh;
   overflow-y: auto;
   position: relative;
 }
+/* width */
+::-webkit-scrollbar {
+  width: 11px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.5);
+}
+.section {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 90%;
+  max-width: 1300px;
+  margin: auto;
+  padding-bottom: 0;
+  box-sizing: border-box;
+  margin: 40px auto;
+
+}
+.projects{
+  min-height: calc(100vh - 150px);
+  margin-bottom: 100px;
+  gap: 80px;
+}
+.header {
+  align-items: center;
+}
+.categories {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+
+  .category {
+    border: 1px solid white;
+    width: 150px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-radius: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    span {
+      background-color: #fff;
+      color: var(--accent-color);
+      width: 40px;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      flex-shrink: 0;
+      text-align: center;
+      width: 25px;
+      height: 25px;
+      margin-left: 5px;
+      border-radius: 50%;
+      font-size: 0.8em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    div {
+      padding: 5px 5px;
+      overflow: hidden;
+      text-align: left;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      flex-grow: 1;
+    }
+    &.active {
+      background-color: #fff;
+      color: var(--accent-color);
+      span {
+        background-color: var(--accent-color);
+        color: white;
+      }
+    }
+  }
+}
+.no-result {
+  font-size: 2em;
+  text-align: center;
+  justify-content: center;
+  margin-top: 140px;
+  margin-bottom: 140px;
+}
 .filter {
   width: 200px;
-  margin-right: 40px;
-  margin-top: 40px;
+  height: auto;
   margin-left: auto;
   display: inherit;
+  padding: 10px 20px;
+  border-radius: 10px;
+  outline: none;
+}
+h2 {
+  font-size: 3em;
+  margin: 0;
+}
+.search-enter-active,
+.search-leave-active {
+  transition: all 0.5s ease;
+}
+.search-enter-from,
+.search-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+@media (max-width: 800px) {
+  .section {
+    width: 100%;
+    padding: 20px;
+    padding-bottom: 0;
+  }
 }
 </style>
