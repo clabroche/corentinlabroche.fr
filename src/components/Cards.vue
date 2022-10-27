@@ -11,7 +11,6 @@
 
 <script setup>
 import Card from './Card.vue';
-import {defineProps} from "vue"
 
 defineProps({
   header: String,

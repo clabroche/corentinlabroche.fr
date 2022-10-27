@@ -29,10 +29,12 @@ import {onMounted, ref, defineAsyncComponent} from 'vue'
 import Particles from './JumboComponents/backgrounds/Particles';
 const canvas = ref(null)
 onMounted(() => {
-  canvas.value.width = window.innerWidth
-  canvas.value.height = window.innerHeight
+  if (canvas.value) {
+    canvas.value.width = window.innerWidth
+    canvas.value.height = window.innerHeight
+  }
   const particles = new Particles(canvas.value)
-  particles.seed()
+  particles.seed(1)
   function step() {
     particles.drawStars()
     requestAnimationFrame(step);
@@ -84,7 +86,7 @@ const previous = () => {
   box-shadow: 0 0 10px 1px rgba(0, 0, 0, 0.3);
 }
   .jumbo {
-    height: 100vh;
+    height: calc(100vh - 75px);
     background-color: #022b36;
     display: flex;
     overflow: hidden;
@@ -125,7 +127,7 @@ const previous = () => {
     cursor: pointer;
     &.left, &.right {
       position: absolute;
-      top: 50vh;
+      top: 50%;
       z-index: 2;
       font-size: 3em;
     }

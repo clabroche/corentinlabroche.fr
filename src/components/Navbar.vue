@@ -1,11 +1,17 @@
 <template>
+  <div id="navbar-shifter"></div>
   <div id="navbar">
     <div class="left">
-      <div id="logo" class="item">
+      <div id="logo" class="item" @click="$router.push({ name: 'home'})">
         <img :style="{width: '100%'}" src="@/assets/img/logo.svg" alt="">
       </div>
     </div>
     <div class="right">
+      <div class="item">
+        <a @click="$router.push({name: 'blog'})">
+          Articles
+        </a>
+      </div>
       <div class="item">
         <a target="_blank" href="https://github.com/clabroche/">
           <font-awesome-icon :icon="['fab', 'github']" class="bottom chevron" />
@@ -30,6 +36,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+#navbar-shifter {
+  height: 75px;
+}
 #navbar {
   box-sizing: border-box;
   color: white;
@@ -41,6 +50,7 @@
   width: 100vw;
   height: 75px;
   position: fixed;
+  top: 0;
   backdrop-filter: blur(10px);
   background-color: rgba(0,0,0,0.2);
   box-shadow: 0 0 11px 0px black;
@@ -56,7 +66,7 @@
   padding-right: 20px;
   #logo {
     height: 100%;
-    pointer-events: none;
+    cursor: pointer;
     img {
       height: 100%;
       width: 100%;

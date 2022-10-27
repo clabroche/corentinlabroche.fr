@@ -11,7 +11,7 @@ export default function Particles(canvas) {
 
 Particles.prototype.seed = function(density = 50) {
   density = 100 - density
-  density = 40000
+  density = 80000
   density = (this.canvas.width * this.canvas.height) / (density);
   this.particles = Array(Math.floor(density)).fill('').map(() => new Particle(null, null, null, this.ctx))
 },
